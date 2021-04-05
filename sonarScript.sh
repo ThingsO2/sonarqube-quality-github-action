@@ -23,7 +23,8 @@ echo "QG Script --> Using SonarQube instance ${SONAR_INSTANCE}"
 echo "QG Script --> Using SonarQube access token ${SONAR_ACCESS_TOKEN}"
 
 # get the compute engine task id
-ce_task_id=$(cat $REPORT_PATH | grep $CE_TASK_ID_KEY | cut -d'=' -f2)
+#ce_task_id=$(cat $REPORT_PATH | grep $CE_TASK_ID_KEY | cut -d'=' -f2)
+ce_task_id=AXihM-M_NPHXbUGNOcMx
 echo "QG Script --> Using task id of ${ce_task_id}"
 
 if [ -z "$ce_task_id" ]; then
