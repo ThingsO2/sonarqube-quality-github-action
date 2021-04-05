@@ -10,7 +10,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: ${{ github.action_path }}/sonarScript.sh
+    - name: sonarScript.sh
       shell: bash
       run: |
         # this script checks the status of a quality gate for a particular analysisID
