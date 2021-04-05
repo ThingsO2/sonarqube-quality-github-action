@@ -23,8 +23,7 @@ echo "QG Script --> Using SonarQube instance ${SONAR_INSTANCE}"
 echo "QG Script --> Using SonarQube access token ${SONAR_ACCESS_TOKEN}"
 
 # get the compute engine task id
-#ce_task_id=$(cat $REPORT_PATH | grep $CE_TASK_ID_KEY | cut -d'=' -f2)
-ce_task_id=AXihM-M_NPHXbUGNOcMx
+ce_task_id=$(cat $REPORT_PATH | grep $CE_TASK_ID_KEY | cut -d'=' -f2)
 echo "QG Script --> Using task id of ${ce_task_id}"
 
 if [ -z "$ce_task_id" ]; then
@@ -67,8 +66,6 @@ echo "QG Script --> Using analysis id of ${ce_analysis_id}"
 # get the status of the quality gate for this analysisId
 qg_status=$(curl -s -u $SONAR_ACCESS_TOKEN: $SONAR_INSTANCE/api/qualitygates/project_status?analysisId="${ce_analysis_id}" | jq -r .projectStatus.status)
 echo "QG Script --> Quality Gate status is ${qg_status}"
-
-exit 1
 
 if [ "${qg_status}" != "OK" ]; then
   echo "QG Script --> Quality gate is not OK - exiting with error"
