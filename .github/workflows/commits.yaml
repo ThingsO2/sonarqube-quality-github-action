@@ -1,6 +1,9 @@
 name: Commits
 on:
-  push
+  push:
+    branches:
+      - '*'
+      - '!main'
 
 jobs:
   commit:
