@@ -15,6 +15,4 @@ runs:
       run: |
         ce_task_id=AXihM-M_NPHXbUGNOcMx
         echo "QG Script --> Using task id of ${ce_task_id}"
-        ce_status=$(curl -s -u "${{ inputs.token }}": "${{ inputs.url }}"/api/ce/task?id=${ce_task_id} | jq -r .task.status)
-
-        echo "QG Script --> Status of SonarQube task is ${ce_status}"
+        curl -s -u "${{ inputs.token }}": "${{ inputs.url }}"/api/ce/task?id=${ce_task_id}
