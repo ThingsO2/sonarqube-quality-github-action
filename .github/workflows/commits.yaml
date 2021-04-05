@@ -1,0 +1,30 @@
+name: Commits
+on:
+  push:
+    branches:
+      - '*'
+      - '!main'
+
+jobs:
+  commit:
+    name: Commits
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install semantic-release
+        run: npm install --save-dev semantic-release
+
+      - name: Replace logs
+        run: sed -i "s/logger.log('There are no relevant changes, so no new version is released.');/throw new AggregateError(['There are no relevant changes...']);/" node_modules/semantic-release/index.js
+
+      - uses: frabert/replace-string-action@v1.2
+        id: branch
+        with:
+          pattern: 'refs\/heads\/(.*)'
+          string: '${{ github.ref }}'
+          replace-with: '$1'
+
+      - name: Analyze commits
+        run: npx semantic-release -b ${{ steps.branch.outputs.replaced }} -p '@semantic-release/commit-analyzer' --dry-run
