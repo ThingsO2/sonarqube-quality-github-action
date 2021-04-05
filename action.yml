@@ -10,8 +10,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: mvn clean verify sonar:sonar -Dsonar.host.url=${{ inputs.url }} -Dsonar.login=${{ inputs.token }}
-      shell: bash
-
     - run: ${{ github.action_path }}/sonarScript.sh ${{ inputs.url }} ${{ inputs.token }}
       shell: bash
+
