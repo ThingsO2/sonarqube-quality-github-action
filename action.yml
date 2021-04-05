@@ -13,8 +13,15 @@ runs:
     - name: sonarScript.sh
       shell: bash
       run: |
+
+        SONAR_INSTANCE="${{ inputs.url }} "
+        SONAR_ACCESS_TOKEN="${{ inputs.token }}"
+        SLEEP_TIME=5
+
+        # get the compute engine task id
+        #ce_task_id=$(cat $REPORT_PATH | grep $CE_TASK_ID_KEY | cut -d'=' -f2)
         ce_task_id=AXihM-M_NPHXbUGNOcMx
         echo "QG Script --> Using task id of ${ce_task_id}"
-        ce_status=$(curl -s -u "${{ inputs.token }}": "${{ inputs.url }}"/api/ce/task?id=${ce_task_id} | jq -r .task.status)
+        ce_status=$(curl -s -u "${SONAR_ACCESS_TOKEN}": "${SONAR_INSTANCE}"/api/ce/task?id=${ce_task_id} | jq -r .task.status)
 
         echo "QG Script --> Status of SonarQube task is ${ce_status}"
