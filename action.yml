@@ -15,4 +15,4 @@ runs:
       run: |
         ce_task_id=AXihM-M_NPHXbUGNOcMx
         echo "QG Script --> Using task id of ${ce_task_id}"
-        curl -s -u "${{ inputs.token }}": "${{ inputs.url }}"/api/ce/task?id=${ce_task_id}
+        curl -s -u ${{ inputs.token }}: ${{ inputs.url }}/api/ce/task?id=${ce_task_id}
