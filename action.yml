@@ -7,6 +7,10 @@ inputs:
   url:
     description: "Sonar Server url"
     required: true
+  report-path:
+    description: "Report txt path"
+    required: false
+    default: './target/sonar/report-task.txt'
 runs:
   using: "composite"
   steps:
@@ -23,18 +27,7 @@ runs:
         set -o errexit
         set -o pipefail
         set -o nounset
-        TARGET_PATH="./target/sonar/report-task.txt"
-        DEFAULT_PATH=".scannerwork/report-task.txt"
-        REPORT_PATH=""
-        # in newer versions of sonar scanner the default report-task.txt location may be different
-        if [ -f "$DEFAULT_PATH" ]; then
-            REPORT_PATH="$DEFAULT_PATH"
-        elif [ -f "$TARGET_PATH" ]; then
-            REPORT_PATH="$TARGET_PATH"
-        else
-          echo "No report path found!!"
-          exit 1
-        fi
+
         CE_TASK_ID_KEY="ceTaskId="
 
         SLEEP_TIME=5
@@ -43,7 +36,7 @@ runs:
         echo "QG Script --> Using SonarQube access token ${{ inputs.token }}"
 
         # get the compute engine task id
-        ce_task_id=$(cat $REPORT_PATH | grep $CE_TASK_ID_KEY | cut -d'=' -f2)
+        ce_task_id=$(cat ${{ inputs.report-path }} | grep $CE_TASK_ID_KEY | cut -d'=' -f2)
 
         echo "QG Script --> Using task id of ${ce_task_id}"
 
