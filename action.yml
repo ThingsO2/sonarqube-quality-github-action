@@ -7,6 +7,10 @@ inputs:
   url:
     description: "Sonar Server url"
     required: true
+  report-path:
+    description: "Report txt path"
+    required: false
+    default: './target/sonar/report-task.txt'
 runs:
   using: "composite"
   steps:
@@ -24,9 +28,6 @@ runs:
         set -o pipefail
         set -o nounset
 
-        # in newer versions of sonar scanner the default report-task.txt location may be different
-        REPORT_PATH=".scannerwork/report-task.txt"
-        REPORT_PATH="./target/sonar/report-task.txt"
         CE_TASK_ID_KEY="ceTaskId="
 
         SLEEP_TIME=5
@@ -35,12 +36,12 @@ runs:
         echo "QG Script --> Using SonarQube access token ${{ inputs.token }}"
 
         # get the compute engine task id
-        ce_task_id=$(cat $REPORT_PATH | grep $CE_TASK_ID_KEY | cut -d'=' -f2)
+        ce_task_id=$(cat ${{ inputs.report-path }} | grep $CE_TASK_ID_KEY | cut -d'=' -f2)
 
         echo "QG Script --> Using task id of ${ce_task_id}"
 
         if [ -z "$ce_task_id" ]; then
-        echo "QG Script --> No task id found"
+          echo "QG Script --> No task id found"
         exit 1
         fi
 
@@ -56,17 +57,17 @@ runs:
         echo "QG Script --> Status of SonarQube task is ${ce_status}"
 
         if [ "${ce_status}" = "CANCELLED" ]; then
-        echo "QG Script --> SonarQube Compute job has been cancelled - exiting with error"
-        exit 1
+          echo "QG Script --> SonarQube Compute job has been cancelled - exiting with error"
+          exit 1
         fi
 
         if [ "${ce_status}" = "FAILED" ]; then
-        echo "QG Script --> SonarQube Compute job has failed - exiting with error"
-        exit 1
+          echo "QG Script --> SonarQube Compute job has failed - exiting with error"
+          exit 1
         fi
 
         if [ "${ce_status}" = "SUCCESS" ]; then
-        wait_for_success=false
+          wait_for_success=false
         fi
 
         sleep "${SLEEP_TIME}"
@@ -81,6 +82,6 @@ runs:
         echo "QG Script --> Quality Gate status is ${qg_status}"
 
         if [ "${qg_status}" != "OK" ]; then
-        echo "QG Script --> Quality gate is not OK - exiting with error"
-        exit 1
+          echo "QG Script --> Quality gate is not OK - exiting with error"
+          exit 1
         fi
